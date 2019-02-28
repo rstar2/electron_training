@@ -1,5 +1,15 @@
 # training
 
+
+## Steps done:
+```
+vue create training
+cd training
+vue add vuetify
+vue add electron-builder
+```
+
+
 ## Project setup
 ```
 npm install
@@ -10,9 +20,19 @@ npm install
 npm run serve
 ```
 
+### Compiles and hot-reloads for development in Electron
+```
+npm run electron:serve
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
+```
+
+### Compiles and minifies for production in Electron
+```
+npm run electron:build
 ```
 
 ### Run your tests
