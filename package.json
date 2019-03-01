@@ -14,7 +14,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "material-design-icons-iconfont": "^3.0.3",
+    "@mdi/font": "^3.5.95",
     "register-service-worker": "^1.5.2",
     "roboto-fontface": "*",
     "vue": "^2.6.6",
