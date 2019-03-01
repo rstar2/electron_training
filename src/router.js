@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import Home from './views/Home.vue';
+import TrainingLogs from './views/TrainingLogs.vue';
 
 Vue.use(Router);
 
@@ -29,7 +31,7 @@ export default new Router({
     {
       path: '/logs',
       name: 'logs',
-      component: Home,
+      component: TrainingLogs,
       meta: {
         text: 'Training Logs',
         drawer: true,
