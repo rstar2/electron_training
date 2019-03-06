@@ -1,10 +1,7 @@
 <template>
   <nav>
     <v-toolbar app class="grey lighten-2">
-      <v-toolbar-side-icon
-        class="grey--text"
-        @click="drawer = !drawer"
-      ></v-toolbar-side-icon>
+      <v-toolbar-side-icon class="grey--text" @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="headline">
         <span class="text-uppercase">Training</span>
         <span class="font-weight-light text-lowercase">Log</span>
@@ -15,10 +12,16 @@
         <span class="mr-2">Logout</span>
         <v-icon>mdi-logout</v-icon>
       </v-btn>
-      <v-btn v-else flat @click="login">
-        <span class="mr-2">Login</span>
-        <v-icon>mdi-login</v-icon>
-      </v-btn>
+      <template v-else >
+        <v-btn flat @click="dialogLogin.show = true; dialogLogin.isRegister = false">
+          <span class="mr-2">Login</span>
+          <v-icon>mdi-login</v-icon>
+        </v-btn>
+        <v-btn flat @click="dialogLogin.show = true; dialogLogin.isRegister = true">
+          <span class="mr-2">Register</span>
+          <v-icon>mdi-account-plus</v-icon>
+        </v-btn>
+      </template>
     </v-toolbar>
 
     <v-navigation-drawer app v-model="drawer" class="primary">
@@ -37,24 +40,42 @@
             <v-icon class="white--text">{{ link.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title class="white--text">{{
-              link.text
-            }}</v-list-tile-title>
+            <v-list-tile-title class="white--text">{{ link.text }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+
+    <v-snackbar v-model="snackbarActive" :timeout="10000" :top="true">
+      {{ snackbarText }}
+      <v-btn color="pink" flat @click="snackbarActive = false">
+        Close
+      </v-btn>
+    </v-snackbar>
+
+    <DialogLogin v-bind.sync="dialogLogin" @action="loginOrRegister" />
   </nav>
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
+
+import bus from '../bus.js';
+import DialogLogin from './DialogLogin.vue';
 
 export default {
   name: 'Navigation',
+  components: { DialogLogin },
   data() {
     return {
-      drawer: false
+      /*Boolean*/ drawer: false,
+
+      /*Object*/ dialogLogin: {
+        show: false,
+        isRegister: false
+      },
+
+      /*{type: String, text: String}*/ snackbarInfo: null
     };
   },
   computed: {
@@ -75,10 +96,42 @@ export default {
 
     avatar() {
       return (this.isAuth && `/avatars/${this.user.id}.ico`) || '';
+    },
+
+    snackbarActive: {
+      /**
+       * @return {Boolean}
+       */
+      get() {
+        return !!this.snackbarInfo;
+      },
+      /**
+       * @param {Boolean} value
+       */
+      set(value) {
+        if (!value) {
+          this.snackbarInfo = null;
+        }
+      }
+    },
+    snackbarText() {
+      return this.snackbarInfo ? this.snackbarInfo.text : '';
     }
   },
   methods: {
-    ...mapActions(['register', 'login', 'logout'])
+    loginOrRegister({ isRegister, email, name, password }) {
+      if (isRegister) {
+        this.$store.dispatch('register', { email, name, password });
+      } else {
+        this.$store.dispatch('login', { email, password });
+      }
+    },
+    logout() {
+      this.$store.dispatch('logout', {});
+    }
+  },
+  created() {
+    bus.$on('info', info => (this.snackbarInfo = info));
   }
 };
 </script>

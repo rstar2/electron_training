@@ -2,14 +2,21 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
+const apiKey = process.env.VUE_APP_FIREBASE_API_KEY;
+const projectId = process.env.VUE_APP_FIREBASE_PROJECT_ID;
+const messagingSenderId = process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID;
 
 // Initialize Firebase
 const config = {
-    apiKey: "AIzaSyDElR8XJIg1krDJmQHrlykb7pjpTRtQUdM",
-    authDomain: "traininglog-4a7a9.firebaseapp.com",
-    databaseURL: "https://traininglog-4a7a9.firebaseio.com",
-    projectId: "traininglog-4a7a9",
-    storageBucket: "traininglog-4a7a9.appspot.com",
-    messagingSenderId: "895735022739"
+  apiKey,
+  projectId,
+  authDomain: `${projectId}.firebaseapp.com`,
+  databaseURL: `https://${projectId}.firebaseio.com`,
+  storageBucket: `${projectId}.appspot.com`,
+  messagingSenderId
 };
 firebase.initializeApp(config);
+
+const db = firebase.firestore();
+
+export default db;

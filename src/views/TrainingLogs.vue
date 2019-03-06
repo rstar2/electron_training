@@ -1,18 +1,19 @@
 <template>
-  <div class="projects">
+  <div class="logs">
     <h1 class="subheading grey--text">Training Logs</h1>
 
     <v-container class="my-5">
+      <v-layout column align-end>
+        <DialogNewTrainingLog @create="createTrainingLog" />
+      </v-layout>
+
       <v-expansion-panel>
-        <v-expansion-panel-content
-          v-for="project in myProjects"
-          :key="project.title"
-        >
-          <div slot="header" class="py-1">{{ project.title }}</div>
+        <v-expansion-panel-content v-for="log in logsShown" :key="log.id">
+          <div slot="header" class="py-1">{{ log.title }}</div>
           <v-card>
             <v-card-text class="px-4 grey--text">
-              <div class="font-weight-bold">Due by {{ project.due }}</div>
-              <div>{{ project.content }}</div>
+              <div class="font-weight-bold">Due by {{ log.dueDate }}</div>
+              <div>{{ log.description }}</div>
             </v-card-text>
           </v-card>
         </v-expansion-panel-content>
@@ -22,52 +23,67 @@
 </template>
 
 <script>
+import db from '../firebase';
+
+import bus from '../bus.js';
+import DialogNewTrainingLog from '@/components/DialogNewTrainingLog.vue';
+
 export default {
+  components: { DialogNewTrainingLog },
   data() {
     return {
-      logs: [
-        {
-          title: 'Design a new website',
-          person: 'The Net Ninja',
-          due: '1st Jan 2019',
-          status: 'ongoing',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Code up the homepage',
-          person: 'Chun Li',
-          due: '10th Jan 2019',
-          status: 'complete',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Design video thumbnails',
-          person: 'Ryu',
-          due: '20th Dec 2018',
-          status: 'complete',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Create a community forum',
-          person: 'Gouken',
-          due: '20th Oct 2018',
-          status: 'overdue',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        }
-      ]
+      /*Boolean*/ filterMyLogs: false,
+      /*{id:String, title:String}[]*/ logs: []
     };
   },
   computed: {
-    myProjects() {
-      return this.projects.filter(project => {
-        return (
-          project.person === 'The Net Ninja' && project.status != 'complete'
-        );
+    logsShown() {
+      return !this.filterMyLogs
+        ? this.logs
+        : this.logs.filter(log => {
+            // TODO: get from the auth state
+            return log.owner === 'Rumen Neshev';
+          });
+    }
+  },
+  created() {
+    db.collection('logs').onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(({ type, doc }) => {
+        switch (type) {
+          case 'added':
+            this.logs.push({ id: doc.id, ...doc.data() });
+            break;
+          case 'removed':
+            {
+              const index = this.logs.findIndex(log => log.id === doc.id);
+              if (index !== -1) {
+                this.logs.splice(index, 1);
+              }
+            }
+            break;
+          case 'modified':
+            {
+              const index = this.logs.findIndex(log => log.id === doc.id);
+              if (index !== -1) {
+                Object.assign(this.logs[index], doc.data());
+              }
+            }
+            break;
+        }
       });
+    });
+  },
+  methods: {
+    on(event) {
+      console.log('event', event);
+    },
+    createTrainingLog(data) {
+      db.collection('logs')
+        .add(data)
+        .then(() => bus.$emit('info', { text: 'Training Log project added' }))
+        .catch(() =>
+          bus.$emit('info', { type: 'error', text: 'Adding Training Log project failed' })
+        );
     }
   }
 };
