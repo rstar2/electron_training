@@ -5,6 +5,7 @@
       <v-card-title>
         <span class="headline" v-text="isRegister ? 'Register' : 'Login'"></span>
       </v-card-title>
+
       <v-card-text>
         <v-form ref="form">
           <v-container grid-list-md>
@@ -13,48 +14,38 @@
                 <v-text-field
                   label="Email*"
                   v-model="email"
-                  :rules="[
-                    v => !!v || 'Email is required',
-                    v => (v && v.length <= 10) || 'Email must be valid email address'
-                  ]"
+                  :rules="validateRules.email"
                   required
                 ></v-text-field>
               </v-flex>
+
               <v-flex xs12 v-if="isRegister">
                 <v-text-field
                   label="Name*"
                   v-model="name"
-                  :rules="[
-                    v => !!v || 'Name is required',
-                    v => (v && v.length >= 5) || 'Name must be at least 5 characters'
-                  ]"
+                  :rules="validateRules.name"
                   required
                 ></v-text-field>
               </v-flex>
-              <v-text-field
-                label="Password*"
-                v-model="password"
-                :rules="[
-                  v => !!v || 'Password is required',
-                  v => (v && v.length >= 4) || 'Password must be at least 4 characters'
-                ]"
-                required
-              ></v-text-field
-              >>
+
+              <v-flex xs12>
+                <v-text-field
+                  label="Password*"
+                  v-model="password"
+                  :rules="validateRules.password"
+                  required
+                ></v-text-field>
+              </v-flex>
             </v-layout>
           </v-container>
         </v-form>
         <small>*indicates required field</small>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="error" flat @click="active = false">Close</v-btn>
-        <v-btn
-          color="primary"
-          flat
-          @click="submit"
-          v-text="isRegister ? 'Register' : 'Login'"
-        ></v-btn>
+        <v-btn color="primary" flat @click="submit" v-text="isRegister ? 'Register' : 'Login'"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -70,7 +61,24 @@ export default {
     return {
       name: '',
       email: '',
-      password: ''
+      password: '',
+
+      validateRules: {
+          email: [
+                    v => !!v || 'Email is required',
+                    v => (v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,7})+$/.test(v)) || 'Email must be valid email address'
+                  ],
+          name: [
+                    v => !!v || 'Name is required',
+                    v => (v && v.length >= 5) || 'Name must be at least 5 characters'
+                  ],
+          password: [
+                  v => !!v || 'Password is required',
+
+                 //   this is Firebase requirement otherwise it's WEAK_PASSWOrD error
+                  v => (v && v.length >= 6) || 'Password must be at least 6 characters'
+                ],
+      }
     };
   },
   computed: {

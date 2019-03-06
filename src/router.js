@@ -4,9 +4,15 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import TrainingLogs from './views/TrainingLogs.vue';
 
+import store from './store';
+
 Vue.use(Router);
 
-export default new Router({
+// const requiresAuth = () {
+
+// }
+
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -25,7 +31,7 @@ export default new Router({
       name: 'signup',
       component: Home,
       meta: {
-        text: 'SignUp',
+        text: 'SignUp'
       }
     },
     {
@@ -45,8 +51,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ './views/About.vue'),
+      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
       meta: {
         text: 'About',
         drawer: true,
@@ -68,3 +73,20 @@ export default new Router({
     { path: '*', redirect: '/' }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isAuth) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;
