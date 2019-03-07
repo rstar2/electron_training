@@ -4,7 +4,7 @@
 
     <v-container class="my-5">
       <v-layout column align-end>
-        <DialogNewTrainingLog @create="createTrainingLog"/>
+        <DialogNewTrainingLog @create="createTrainingLog" />
       </v-layout>
 
       <v-expansion-panel>

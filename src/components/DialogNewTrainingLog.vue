@@ -16,18 +16,26 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12 sm6 md4>
+                <v-text-field label="Title*" v-model="title" :rules="[v => !!v || 'Title is required']" required></v-text-field>
+              </v-flex>
+              <v-flex xs12 md4>
                 <v-text-field
-                  label="Legal first name*"
-                  v-model="name"
-                  :rules="[
-                    v => !!v || 'Name is required',
-                    v => (v && v.length <= 10) || 'Name must be less than 10 characters'
-                  ]"
+                  label="Description*"
+                  v-model="description"
+                  :rules="[v => !!v || 'Description is required']"
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12>
-                <v-text-field label="Email*" v-model="email" required></v-text-field>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Start Date*"
+                  v-model="startDate"
+                  :rules="[v => !!v || 'Start Date is required']"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field label="Due Date" v-model="dueDate"></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>

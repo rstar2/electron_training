@@ -11,30 +11,15 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
-                <v-text-field
-                  label="Email*"
-                  v-model="email"
-                  :rules="validateRules.email"
-                  required
-                ></v-text-field>
+                <v-text-field label="Email*" v-model="email" :rules="validateRules.email" required></v-text-field>
               </v-flex>
 
               <v-flex xs12 v-if="isRegister">
-                <v-text-field
-                  label="Name*"
-                  v-model="name"
-                  :rules="validateRules.name"
-                  required
-                ></v-text-field>
+                <v-text-field label="Name*" v-model="name" :rules="validateRules.name" required></v-text-field>
               </v-flex>
 
               <v-flex xs12>
-                <v-text-field
-                  label="Password*"
-                  v-model="password"
-                  :rules="validateRules.password"
-                  required
-                ></v-text-field>
+                <v-text-field label="Password*" v-model="password" :rules="validateRules.password" required></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -64,20 +49,16 @@ export default {
       password: '',
 
       validateRules: {
-          email: [
-                    v => !!v || 'Email is required',
-                    v => (v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,7})+$/.test(v)) || 'Email must be valid email address'
-                  ],
-          name: [
-                    v => !!v || 'Name is required',
-                    v => (v && v.length >= 5) || 'Name must be at least 5 characters'
-                  ],
-          password: [
-                  v => !!v || 'Password is required',
-
-                 //   this is Firebase requirement otherwise it's WEAK_PASSWOrD error
-                  v => (v && v.length >= 6) || 'Password must be at least 6 characters'
-                ],
+        email: [
+          v => !!v || 'Email is required',
+          v => (v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,7})+$/.test(v)) || 'Email must be valid email address'
+        ],
+        name: [v => !!v || 'Name is required', v => (v && v.length >= 5) || 'Name must be at least 5 characters'],
+        password: [
+          v => !!v || 'Password is required',
+          //   this is Firebase requirement otherwise it's WEAK_PASSWOrD error
+          v => (v && v.length >= 6) || 'Password must be at least 6 characters'
+        ]
       }
     };
   },

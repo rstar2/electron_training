@@ -8,19 +8,21 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn v-if="isAuth" flat @click="logout">
-        <span class="mr-2">Logout</span>
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
-      <template v-else >
-        <v-btn flat @click="dialogLogin.show = true; dialogLogin.isRegister = false">
-          <span class="mr-2">Login</span>
-          <v-icon>mdi-login</v-icon>
+      <template v-if="$store.state.initialized">
+        <v-btn v-if="isAuth" flat @click="onLogout">
+          <span class="mr-2">Logout</span>
+          <v-icon>mdi-logout</v-icon>
         </v-btn>
-        <v-btn flat @click="dialogLogin.show = true; dialogLogin.isRegister = true">
-          <span class="mr-2">Register</span>
-          <v-icon>mdi-account-plus</v-icon>
-        </v-btn>
+        <template v-else>
+          <v-btn flat @click="showDialogLogin(false)">
+            <span class="mr-2">Login</span>
+            <v-icon>mdi-login</v-icon>
+          </v-btn>
+          <v-btn flat @click="showDialogLogin(true)">
+            <span class="mr-2">Register</span>
+            <v-icon>mdi-account-plus</v-icon>
+          </v-btn>
+        </template>
       </template>
     </v-toolbar>
 
@@ -48,12 +50,10 @@
 
     <v-snackbar v-model="snackbarActive" :timeout="10000" :top="true">
       {{ snackbarText }}
-      <v-btn color="pink" flat @click="snackbarActive = false">
-        Close
-      </v-btn>
+      <v-btn color="pink" flat @click="snackbarActive = false">Close</v-btn>
     </v-snackbar>
 
-    <DialogLogin v-bind.sync="dialogLogin" @action="loginOrRegister" />
+    <DialogLogin v-bind.sync="dialogLogin" @action="onLoginOrRegister" />
   </nav>
 </template>
 
@@ -119,14 +119,18 @@ export default {
     }
   },
   methods: {
-    loginOrRegister({ isRegister, email, name, password }) {
+    showDialogLogin(isRegister) {
+      this.dialogLogin.show = true;
+      this.dialogLogin.isRegister = isRegister;
+    },
+    onLoginOrRegister({ isRegister, email, name, password }) {
       if (isRegister) {
         this.$store.dispatch('register', { email, name, password });
       } else {
         this.$store.dispatch('login', { email, password });
       }
     },
-    logout() {
+    onLogout() {
       this.$store.dispatch('logout', {});
     }
   },

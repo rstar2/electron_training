@@ -57,3 +57,25 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## For Firebase Cloud Functions:
+Install firebase-tools:
+```
+npm i -g firebase-tools
+```
+
+###Init a project here:
+1.
+```
+firebase login
+```
+2.
+```
+firebase init fuctions
+```
+
+###Deploy the function:
+```
+firebase deploy --only functions
+```
