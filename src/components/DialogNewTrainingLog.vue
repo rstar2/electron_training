@@ -1,5 +1,8 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <!-- Close on ESC and submit on ENTER -->
+  <v-dialog v-model="dialog" persistent max-width="600px"
+    @keydown.esc="dialog = false"
+    @keyup.enter="submit">
     <!-- The activator slot - Note the 'on' slot-prop is needed
           as it handles the click and etc... listeners -->
     <template v-slot:activator="{ on }">

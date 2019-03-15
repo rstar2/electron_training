@@ -21,6 +21,18 @@ const store = new Vuex.Store({
     },
     isAdmin(state) {
       return !!state.user && state.user.admin;
+    },
+    authUid(state) {
+      return !!state.user && state.user.uid;
+    },
+    checkAuthUser(state, getters) {
+      // 1. getters receive other getters as second argument
+      // 2. return as a function, so it can be used like this from a VM:
+      // this.$store.getters.checkAuthUser("asd")
+      return uid => {
+        const authUid = getters.authUid;
+        return authUid && authUid == uid;
+      };
     }
   },
   mutations: {

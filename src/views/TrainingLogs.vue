@@ -36,7 +36,7 @@ export default {
   components: { DialogNewTrainingLog },
   data() {
     return {
-      /*Boolean*/ filterMyLogs: false,
+      /*Boolean*/ filterMyLogs: true,
       /*{id:String, title:String}[]*/ logs: []
     };
   },
@@ -45,8 +45,8 @@ export default {
       return !this.filterMyLogs
         ? this.logs
         : this.logs.filter(log => {
-            // TODO: get from the auth state
-            return log.owner === 'Rumen Neshev';
+            // get from the auth user
+            return this.$store.getters.checkAuthUser(log.owner);
           });
     }
   },
