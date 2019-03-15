@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="active" persistent max-width="600px">
+  <v-dialog v-model="active" persistent max-width="600px" @keydown.esc="active = false" @keyup.enter="submit">
     <!--  The default slot - e.g the dialog's content -->
     <v-card>
       <v-card-title>

@@ -4,7 +4,8 @@
 
     <v-container class="my-5">
       <v-layout column align-end>
-        <DialogNewTrainingLog @create="createTrainingLog" />
+        <!-- The DialogNewTrainingLog is actually the trigger that contains the dialog inside -->
+        <DialogNewTrainingLog @create="createTrainingLog">New Log</DialogNewTrainingLog>
       </v-layout>
 
       <v-expansion-panel>
@@ -78,9 +79,6 @@ export default {
     });
   },
   methods: {
-    on(event) {
-      console.log('event', event);
-    },
     createTrainingLog(data) {
       db.collection('logs')
         .add(data)

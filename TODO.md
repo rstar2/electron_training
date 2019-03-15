@@ -1,0 +1,3 @@
+- show error on failed actions - login/.../new_log
+- show loading indicator
+- global 'logs' Vuex state 

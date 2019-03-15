@@ -65,7 +65,7 @@ Install firebase-tools:
 npm i -g firebase-tools
 ```
 
-###Init a project here:
+### Init a project here:
 1.
 ```
 firebase login
@@ -75,7 +75,25 @@ firebase login
 firebase init fuctions
 ```
 
-###Deploy the function:
+### Deploy the function:
 ```
 firebase deploy --only functions
 ```
+
+
+## Deploy (and free hosting) with Surge
+
+1. Register a domain - for instance with FreeNom - traininglog.ml
+
+
+2. Install surge (for static sites only)
+```
+npm i -g surge
+```
+
+3. Deploy to traininglog.ml
+```
+surge ./dist traininglog.ml
+```
+
+4. Point the domain to the surge hosting IP - 45.55.110.124

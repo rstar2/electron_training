@@ -118,6 +118,25 @@ export default {
       return this.snackbarInfo ? this.snackbarInfo.text : '';
     }
   },
+  watch: {
+    /**
+     * Watch for when we are logined/logouted
+     */
+    isAuth(newValue) {
+      // watch
+      if (newValue) {
+        // go to the 'resticted' route
+        // it should be /xxx?redirect=yyy
+        // this.$route is current route
+        const redirectUrl = this.$route.query.redirect;
+        if (redirectUrl) {
+          this.$router.push(redirectUrl);
+        }
+      } else {
+        this.$router.push('/');
+      }
+    }
+  },
   methods: {
     showDialogLogin(isRegister) {
       this.dialogLogin.show = true;

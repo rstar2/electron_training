@@ -1,12 +1,15 @@
 <template>
   <!-- Close on ESC and submit on ENTER -->
-  <v-dialog v-model="dialog" persistent max-width="600px"
-    @keydown.esc="dialog = false"
-    @keyup.enter="submit">
+  <v-dialog v-model="dialog" persistent max-width="600px" @keydown.esc="dialog = false" @keyup.enter="submit">
     <!-- The activator slot - Note the 'on' slot-prop is needed
           as it handles the click and etc... listeners -->
     <template v-slot:activator="{ on }">
-      <v-btn flat color="purple" dark v-on="on">New Training Log</v-btn>
+      <v-btn flat color="purple" dark v-on="on">
+        <!-- Insert default slot, with predifined text if not applied in the parent -->
+        <slot>
+          New Training Log
+        </slot>
+      </v-btn>
     </template>
 
     <!--  The default slot - e.g the dialog's content -->
@@ -17,11 +20,11 @@
       <v-card-text>
         <v-form ref="form">
           <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 sm6 md4>
+            <v-layout row wrap>
+              <v-flex xs12>
                 <v-text-field label="Title*" v-model="title" :rules="[v => !!v || 'Title is required']" required></v-text-field>
               </v-flex>
-              <v-flex xs12 md4>
+              <v-flex xs12>
                 <v-text-field
                   label="Description*"
                   v-model="description"
@@ -29,16 +32,50 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Start Date*"
-                  v-model="startDate"
-                  :rules="[v => !!v || 'Start Date is required']"
-                  required
-                ></v-text-field>
+              <v-flex xs6>
+                <v-menu
+                  v-model="startDatePicker"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                  <v-text-field
+                    slot="activator"
+                    v-model="startDate"
+                    label="Start Date*"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    required
+                    :rules="[v => !!v || 'Start Date is required']"
+                  ></v-text-field>
+                  <v-date-picker v-model="startDate" @input="startDatePicker = false"></v-date-picker>
+                </v-menu>
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Due Date" v-model="dueDate"></v-text-field>
+              <v-flex xs6>
+                <v-menu
+                  v-model="dueDatePicker"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                  <v-text-field
+                    slot="activator"
+                    v-model="dueDate"
+                    label="Due Date"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    required
+                  ></v-text-field>
+                  <v-date-picker v-model="dueDate" @input="dueDatePicker = false"></v-date-picker>
+                </v-menu>
               </v-flex>
             </v-layout>
           </v-container>
@@ -58,12 +95,18 @@
 export default {
   data() {
     return {
+      // control the visibility of the dialog
       dialog: false,
 
+      //
       title: '',
       description: '',
       startDate: '',
-      dueDate: ''
+      dueDate: '',
+
+      // control the Date pickers
+      startDatePicker: false,
+      dueDatePicker: false
     };
   },
   watch: {
