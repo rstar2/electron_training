@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 import Home from './views/Home.vue';
 import TrainingLogs from './views/TrainingLogs.vue';
+import TrainingLog from './components/TrainingLog.vue';
 
 import store from './store';
 
@@ -42,6 +43,15 @@ const router = new Router({
         text: 'Training Logs',
         drawer: true,
         order: 1,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/logs/:logId',
+      name: 'log',
+      component: TrainingLog,
+      meta: {
+        text: 'Training Log',
         requiresAuth: true
       }
     },

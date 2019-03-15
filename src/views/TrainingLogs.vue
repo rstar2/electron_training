@@ -15,6 +15,10 @@
               <div class="font-weight-bold">Due by {{ log.dueDate }}</div>
               <div>{{ log.description }}</div>
             </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" flat @click="$router.push({ name: 'log', params: { logId: log.id } })">View</v-btn>
+            </v-card-actions>
           </v-card>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -81,9 +85,9 @@ export default {
       db.collection('logs')
         .add(data)
         .then(() => bus.$emit('info', { text: 'Training Log project added' }))
-        .catch(() =>
-          bus.$emit('info', { type: 'error', text: 'Adding Training Log project failed' })
-        );
+        .catch(() => {
+          bus.$emit('info', { type: 'error', text: 'Adding Training Log project failed' });
+        });
     }
   }
 };

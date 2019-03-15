@@ -57,8 +57,10 @@ export default {
     return {
       dialog: false,
 
-      name: '',
-      email: ''
+      title: '',
+      description: '',
+      startDate: '',
+      dueDate: ''
     };
   },
   watch: {
@@ -68,7 +70,7 @@ export default {
         // this.$refs.form.reset(); // this resets them to 'undefined',
         // so use resetValidation() and manually reset the state
         this.$refs.form.resetValidation();
-        this.email = this.name = '';
+        this.title = this.description = this.startDate = this.dueDate = '';
       }
     }
   },
@@ -76,7 +78,12 @@ export default {
     submit() {
       if (this.$refs.form.validate()) {
         this.dialog = false;
-        this.$emit('create', { name: this.name, email: this.email });
+        this.$emit('create', {
+          title: this.title,
+          description: this.description,
+          startDate: this.startDate,
+          dueDate: this.dueDate
+        });
       }
     }
   }
