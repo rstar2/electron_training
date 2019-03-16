@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="active" persistent max-width="600px" @keydown.esc="active = false" @keyup.enter="submit">
+  <v-dialog v-model="active" persistent max-width="600px" @keydown.esc="active = false">
     <!--  The default slot - e.g the dialog's content -->
     <v-card>
       <v-card-title>
@@ -11,15 +11,38 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
-                <v-text-field label="Email*" v-model="email" :rules="validateRules.email" required></v-text-field>
+                <v-text-field
+                  label="Email*"
+                  name="email"
+                  v-model="email"
+                  :rules="validateRules.email"
+                  required
+                  @keyup.enter="submit"
+                ></v-text-field>
               </v-flex>
 
               <v-flex xs12 v-if="isRegister">
-                <v-text-field label="Name*" v-model="name" :rules="validateRules.name" required></v-text-field>
+                <v-text-field
+                  label="Name*"
+                  v-model="name"
+                  :rules="validateRules.name"
+                  required
+                  @keyup.enter="submit"
+                ></v-text-field>
               </v-flex>
 
               <v-flex xs12>
-                <v-text-field label="Password*" v-model="password" :rules="validateRules.password" required></v-text-field>
+                <v-text-field
+                  label="Password*"
+                  name="password"
+                  v-model="password"
+                  :type="passwordShown ? 'text' : 'password'"
+                  :append-icon="passwordShown ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="passwordShown = !passwordShown"
+                  :rules="validateRules.password"
+                  required
+                  @keyup.enter="submit"
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -47,6 +70,7 @@ export default {
       name: '',
       email: '',
       password: '',
+      passwordShown: false,
 
       validateRules: {
         email: [
@@ -85,6 +109,7 @@ export default {
         // so use resetValidation() and manually reset the state
         this.$refs.form.resetValidation();
         this.email = this.name = this.password = '';
+        this.passwordShown = false;
       }
     }
   },

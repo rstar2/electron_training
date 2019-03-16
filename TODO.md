@@ -1,3 +1,6 @@
-- show error on failed actions - login/.../new_log
+- ~~show error on failed actions - login/.../new_log~~
 - show loading indicator
-- global 'logs' Vuex state 
+- move 'logs' to global Vuex state
+- save startData/dueDate as number or firebase-Date
+- login with Firebase - Facebook/Google OAuth2
+- ~~auto prefill the forms by the browser~~  -> the inputs have to be named

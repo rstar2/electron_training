@@ -143,14 +143,24 @@ export default {
       this.dialogLogin.isRegister = isRegister;
     },
     onLoginOrRegister({ isRegister, email, name, password }) {
+      let promise;
       if (isRegister) {
-        this.$store.dispatch('register', { email, name, password });
+        promise = this.$store.dispatch('register', { email, name, password });
       } else {
-        this.$store.dispatch('login', { email, password });
+        promise = this.$store.dispatch('login', { email, password });
       }
+      promise.catch(error => {
+        //const errorCode = error.code;
+        const errorMessage = error.message;
+        bus.$emit('info', { type: 'error', text: errorMessage });
+      });
     },
     onLogout() {
-      this.$store.dispatch('logout', {});
+      this.$store.dispatch('logout', {}).catch(error => {
+        //const errorCode = error.code;
+        const errorMessage = error.message;
+        bus.$emit('info', { type: 'error', text: errorMessage });
+      });
     }
   },
   created() {

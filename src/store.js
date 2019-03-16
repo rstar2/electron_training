@@ -49,62 +49,58 @@ const store = new Vuex.Store({
   },
   actions: {
     /**
-     * @param {*} context
+     * Register action
+     * @param {Vuex.ActionContext} context
      * @param {{name:String, email:String, password: String}} payload
+     * @return {Promise}
      */
     register(context, payload) {
       const { email, password, name } = payload;
 
       // asynchronous action than returns Promise so it can be chain in more complex flows
-      return auth
-        .createUserWithEmailAndPassword(email, password)
-        .then(creds => {
-          const user = creds.user;
+      return auth.createUserWithEmailAndPassword(email, password).then(creds => {
+        const user = creds.user;
 
-          // 1. Store limited data in the auth user record
-          // we can use either the returned user object or "firebase.auth().currentUser"
-          //   return user
-          //     .updateProfile({
-          //       displayName: name
-          //       //photoURL: // some photo url
-          //     });
+        // 1. Store limited data in the auth user record
+        // we can use either the returned user object or "firebase.auth().currentUser"
+        //   return user
+        //     .updateProfile({
+        //       displayName: name
+        //       //photoURL: // some photo url
+        //     });
 
-          //2. create new user inside a custom database 'users' collection
-          // create it with the same matching uid
-          return db
-            .collection('users')
-            .doc(user.uid)
-            .set({
-              displayName: name,
-              age: 40
-              // ...
-            });
-        })
-        .catch(error => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ...
-        });
+        //2. create new user inside a custom database 'users' collection
+        // create it with the same matching uid
+        return db
+          .collection('users')
+          .doc(user.uid)
+          .set({
+            displayName: name,
+            age: 40
+            // ...
+          });
+      });
     },
 
+    /**
+     * Logn=in action
+     * @param {Vuex.ActionContext} context
+     * @param {{email:String, password: String}} payload
+     * @return {Promise}
+     */
     login(context, payload) {
       const { email, password } = payload;
 
-      auth.signInWithEmailAndPassword(email, password).catch(error => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ...
-      });
+      return auth.signInWithEmailAndPassword(email, password);
     },
 
+    /**
+     * Logout action
+     * @param {Vuex.ActionContext} context
+     * @return {Promise}
+     */
     logout(context) {
-      auth.signOut().catch(error => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+      return auth.signOut();
     }
   }
 });

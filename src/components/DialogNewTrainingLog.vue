@@ -1,6 +1,6 @@
 <template>
   <!-- Close on ESC and submit on ENTER -->
-  <v-dialog v-model="dialog" persistent max-width="600px" @keydown.esc="dialog = false" @keyup.enter="submit">
+  <v-dialog v-model="dialog" persistent max-width="600px" @keydown.esc="dialog = false">
     <!-- The activator slot - Note the 'on' slot-prop is needed
           as it handles the click and etc... listeners -->
     <template v-slot:activator="{ on }">
@@ -22,7 +22,13 @@
           <v-container grid-list-md>
             <v-layout row wrap>
               <v-flex xs12>
-                <v-text-field label="Title*" v-model="title" :rules="[v => !!v || 'Title is required']" required></v-text-field>
+                <v-text-field
+                  label="Title*"
+                  v-model="title"
+                  :rules="[v => !!v || 'Title is required']"
+                  required
+                  @keyup.enter="submit"
+                ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-text-field
@@ -30,6 +36,7 @@
                   v-model="description"
                   :rules="[v => !!v || 'Description is required']"
                   required
+                  @keyup.enter="submit"
                 ></v-text-field>
               </v-flex>
               <v-flex xs6>
@@ -51,6 +58,7 @@
                     readonly
                     required
                     :rules="[v => !!v || 'Start Date is required']"
+                    @keyup.enter="submit"
                   ></v-text-field>
                   <v-date-picker v-model="startDate" @input="startDatePicker = false"></v-date-picker>
                 </v-menu>
@@ -73,6 +81,7 @@
                     prepend-icon="mdi-calendar"
                     readonly
                     required
+                    @keyup.enter="submit"
                   ></v-text-field>
                   <v-date-picker v-model="dueDate" @input="dueDatePicker = false"></v-date-picker>
                 </v-menu>
