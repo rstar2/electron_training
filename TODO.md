@@ -2,5 +2,6 @@
 - show loading indicator
 - move 'logs' to global Vuex state
 - save startData/dueDate as number or firebase-Date
+- ~~login with Firebase - Google OAuth2~~ -> create/configure Google OAuth2 app and etc...
 - login with Firebase - Facebook/Google OAuth2
 - ~~auto prefill the forms by the browser~~  -> the inputs have to be named

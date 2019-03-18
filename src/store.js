@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { db, auth } from './firebase';
+import { db, auth, firebase } from './firebase';
 
 Vue.use(Vuex);
 
@@ -92,6 +92,41 @@ const store = new Vuex.Store({
       const { email, password } = payload;
 
       return auth.signInWithEmailAndPassword(email, password);
+    },
+
+    loginWithGoogle(context) {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      // provider additional OAuth 2.0 scopes
+      // googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+      // To localize the provider's OAuth flow to the user's preferred language
+      // auth.languageCode = 'pt'
+
+      // Specify additional custom OAuth provider parameters that you want to send with the OAuth request
+      // provider.setCustomParameters({
+      //     'login_hint': 'user@example.com'
+      //   });
+
+      // To sign in with a pop-up window, call 'signInWithPopup' :
+      return auth.signInWithPopup(provider).then(result => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const token = result.credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+      });
+
+      // To sign in by redirecting to the sign-in page, call 'signInWithRedirect' :
+      // auth.signInWithRedirect(provider);
+      // auth.getRedirectResult().then(function(result) {
+      //     if (result.credential) {
+      //       // This gives you a Google Access Token. You can use it to access the Google API.
+      //       var token = result.credential.accessToken;
+      //       // ...
+      //     }
+      //     // The signed-in user info.
+      //     var user = result.user;
+      //   });
     },
 
     /**

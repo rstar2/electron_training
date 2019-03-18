@@ -44,6 +44,14 @@
                   @keyup.enter="submit"
                 ></v-text-field>
               </v-flex>
+
+              <!-- Implement "Login with Google" -->
+              <v-flex xs12 class="text-xs-center">
+                <v-divider class="my-3"/>
+                <img src="@/assets/sign-in-with-google.png"
+                    @click="active = false; loginWithGoogle()"
+                    style="width: 50%" />
+              </v-flex>
             </v-layout>
           </v-container>
         </v-form>
@@ -51,6 +59,9 @@
       </v-card-text>
 
       <v-card-actions>
+        <!-- <img src="@/assets/sign-in-with-google.png"
+            @click="active = false; loginWithGoogle()"
+            style="width: 30%" /> -->
         <v-spacer></v-spacer>
         <v-btn color="error" flat @click="active = false">Close</v-btn>
         <v-btn color="primary" flat @click="submit" v-text="isRegister ? 'Register' : 'Login'"></v-btn>
@@ -60,6 +71,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   props: {
     isRegister: { type: Boolean, default: false },
@@ -114,6 +127,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['loginWithGoogle']),
     submit() {
       if (this.$refs.form.validate()) {
         this.active = false;
