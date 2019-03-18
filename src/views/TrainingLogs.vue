@@ -29,8 +29,8 @@
 
 <script>
 import { db } from '../firebase';
-
-import bus from '../bus.js';
+import * as utils from '../utils';
+import bus from '../bus';
 import DialogNewTrainingLog from '@/components/DialogNewTrainingLog.vue';
 
 export default {
@@ -56,7 +56,7 @@ export default {
       snapshot.docChanges().forEach(({ type, doc }) => {
         switch (type) {
           case 'added':
-            this.logs.push({ id: doc.id, ...doc.data() });
+            this.logs.push({ id: doc.id, ...this.fromDocData(doc.data()) });
             break;
           case 'removed':
             {
@@ -70,7 +70,7 @@ export default {
             {
               const index = this.logs.findIndex(log => log.id === doc.id);
               if (index !== -1) {
-                Object.assign(this.logs[index], doc.data());
+                Object.assign(this.logs[index], this.fromDocData(doc.data()));
               }
             }
             break;
@@ -86,6 +86,31 @@ export default {
         .catch(() => {
           bus.$emit('info', { type: 'error', text: 'Adding Training Log project failed' });
         });
+    },
+
+    toDocData(data) {
+      const dataFixed = { ...data };
+      // the incomming 'startDate'/'dueDate' are String types
+      if (dataFixed.startDate) {
+        dataFixed.startDate = utils.strDateToFirebaseTimestamp(dataFixed.startDate);
+      }
+      if (dataFixed.dueDate) {
+        dataFixed.dueDate = utils.strDateToFirebaseTimestamp(dataFixed.dueDate);
+      }
+      // use current authorized user UID
+      dataFixed.owner = this.$store.getters.authUid;
+      return dataFixed;
+    },
+    fromDocData(data) {
+      const dataFixed = { ...data };
+      if (dataFixed.startDate) {
+        dataFixed.startDate = utils.firebaseTimestampToDate(dataFixed.startDate);
+      }
+      if (dataFixed.dueDate) {
+        dataFixed.dueDate = utils.firebaseTimestampToDate(dataFixed.dueDate);
+      }
+
+      return dataFixed;
     }
   }
 };
