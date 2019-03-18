@@ -80,6 +80,8 @@ export default {
   },
   methods: {
     createTrainingLog(data) {
+      //convert String to firestore.Timestamp
+      data = this.toDocData(data);
       db.collection('logs')
         .add(data)
         .then(() => bus.$emit('info', { text: 'Training Log project added' }))
