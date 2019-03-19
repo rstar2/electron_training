@@ -7,11 +7,11 @@ import { module as logsModule, plugin as logsPlugin } from './logs';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  //   strict: process.env.NODE_ENV !== 'production',
+  strict: process.env.NODE_ENV !== 'production',
   devtools: process.env.NODE_ENV !== 'production',
   state: {
     /*Boolean*/ initialized: false,
-    /*firebase.User*/ user: null,
+    /*firebase.User*/ user: null, // just the needed props from the firebase.User
 
     // Implement with different modules
     friends: {},
@@ -23,7 +23,7 @@ const store = new Vuex.Store({
       return !!state.user;
     },
     isAdmin(state) {
-      return !!state.user && state.user.admin;
+      return !!state.user && !!state.user.claims.admin;
     },
     authUid(state) {
       return !!state.user && state.user.uid;
@@ -44,10 +44,19 @@ const store = new Vuex.Store({
     },
     /**
      * @param {*} state
-     * @param {firebase.User?} payload
+     * @param {firebase.User?} payload firebase.User instance enhanced with a 'claims' Object prop
      */
     user(state, payload) {
-      state.user = payload;
+      // don't use the 'payload' as it doesn't work in Vuex strict mode
+      // as Firebase internally changes some its user's (e.g. payload's) props
+      state.user = !payload
+        ? null
+        : {
+            uid: payload.uid,
+            email: payload.email,
+            displayName: payload.displayName,
+            claims: payload.claims
+          };
     }
   },
   actions: {
@@ -158,10 +167,11 @@ auth.onAuthStateChanged(user => {
   if (user) {
     // auth user - wait to get the custom claims
     promise = user.getIdTokenResult().then(idTokenResult => {
+        // this is like s JWT token (aud, iss, iat, exp, email, sub, user_id) and custom ones like 'admin'
       console.log('Logged in user claims', idTokenResult.claims);
 
-      // store this custom 'admin' claim directly onto the stored user object
-      user.admin == !!idTokenResult.claims.admin;
+      // store the custom  claims directly onto the stored user object (currently 'admin' only)
+      user.claims == idTokenResult.claims;
       return user;
     });
   } else {

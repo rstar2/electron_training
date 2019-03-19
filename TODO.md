@@ -8,5 +8,5 @@
 - localize (DatePicker also)
 - ~~TrainingLog single log page~~
 - TrainingLog single log page - fill with real data from the 'log'
-- fix Vuex to work in strict mode
-- 
+- ~~fix Vuex to work in strict mode~~ -> don't store the fireBase.User directly in the Vuex state as its propsare internally mutated by Firebase (which is against the strict mode, to happen always in mutation handlers)
+- implement user's dashboard - friends/request/etc...

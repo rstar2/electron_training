@@ -47,6 +47,24 @@ const module = {
 
 // create a Vuex store plugin
 const plugin = store => {
+  const subscribeForLogs = () => {
+    return db.collection('logs').onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(({ type, doc }) => {
+        switch (type) {
+          case 'added':
+            store.commit('logs/add', { id: doc.id, data: doc.data() });
+            break;
+          case 'removed':
+            store.commit('logs/remove', { id: doc.id });
+            break;
+          case 'modified':
+            store.commit('logs/modified', { id: doc.id, data: doc.data() });
+            break;
+        }
+      });
+    });
+  };
+
   // register this 'onSnapshot' only if we are logged-in, and unregister when logout
   // use store plugin and store.watch() or store.subscribe or store.subscribeAction
   let unsubscribeForLogs = null;
@@ -73,24 +91,6 @@ const plugin = store => {
       immediate: true
     }
   );
-
-  const subscribeForLogs = () => {
-    return db.collection('logs').onSnapshot(snapshot => {
-      snapshot.docChanges().forEach(({ type, doc }) => {
-        switch (type) {
-          case 'added':
-            store.commit('logs/add', { id: doc.id, data: doc.data() });
-            break;
-          case 'removed':
-            store.commit('logs/remove', { id: doc.id });
-            break;
-          case 'modified':
-            store.commit('logs/modified', { id: doc.id, data: doc.data() });
-            break;
-        }
-      });
-    });
-  };
 };
 
 export { module, plugin };
