@@ -47,7 +47,7 @@ const router = new Router({
       }
     },
     {
-      path: '/logs/:logId',
+      path: '/logs/:id',
       name: 'log',
       component: TrainingLog,
       meta: {

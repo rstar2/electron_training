@@ -6,3 +6,5 @@
 - login with Firebase - Facebook/Google OAuth2
 - ~~auto prefill the forms by the browser~~  -> the inputs have to be named
 - localize (DatePicker also)
+- ~~TrainingLog single log page~~
+- TrainingLog single log page - fill with real data from the 'log'

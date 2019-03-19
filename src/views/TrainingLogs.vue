@@ -19,7 +19,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="error" flat @click="removeLog(log.id)">Remove</v-btn>
-              <v-btn color="primary" flat @click="$router.push({ name: 'log', params: { logId: log.id } })">View</v-btn>
+              <v-btn color="primary" flat @click="$router.push({ name: 'log', params: { id: log.id } })">View</v-btn>
             </v-card-actions>
           </v-card>
         </v-expansion-panel-content>
