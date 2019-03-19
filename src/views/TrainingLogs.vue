@@ -5,7 +5,7 @@
     <v-container class="my-5">
       <v-layout column align-end>
         <!-- The DialogNewTrainingLog is actually the trigger that contains the dialog inside -->
-        <DialogNewTrainingLog @create="createTrainingLog">New Log</DialogNewTrainingLog>
+        <DialogNewTrainingLog @create="createLog">New Log</DialogNewTrainingLog>
       </v-layout>
 
       <v-expansion-panel>
@@ -18,7 +18,8 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" flat @click="$router.push({ name: 'log', params: { logId: log.id } })">View</v-btn>
+              <v-btn color="error" flat @click="removeLog(log.id)">Remove</v-btn>
+              <v-btn color="primary" flat @click="$router.push({ name: 'log', params: { logId: log.id } })">View</v-btn>
             </v-card-actions>
           </v-card>
         </v-expansion-panel-content>
@@ -28,8 +29,7 @@
 </template>
 
 <script>
-import { db } from '../firebase';
-import * as utils from '../utils';
+import { mapState /*, mapGetters */ } from 'vuex';
 import bus from '../bus';
 import DialogNewTrainingLog from '@/components/DialogNewTrainingLog.vue';
 
@@ -37,8 +37,7 @@ export default {
   components: { DialogNewTrainingLog },
   data() {
     return {
-      /*Boolean*/ filterMyLogs: true,
-      /*{id:String, title:String}[]*/ logs: []
+      /*Boolean*/ filterMyLogs: true
     };
   },
   computed: {
@@ -49,70 +48,47 @@ export default {
             // get from the auth user
             return this.$store.getters.checkAuthUser(log.owner);
           });
-    }
-  },
-  created() {
-    db.collection('logs').onSnapshot(snapshot => {
-      snapshot.docChanges().forEach(({ type, doc }) => {
-        switch (type) {
-          case 'added':
-            this.logs.push({ id: doc.id, ...this.fromDocData(doc.data()) });
-            break;
-          case 'removed':
-            {
-              const index = this.logs.findIndex(log => log.id === doc.id);
-              if (index !== -1) {
-                this.logs.splice(index, 1);
-              }
-            }
-            break;
-          case 'modified':
-            {
-              const index = this.logs.findIndex(log => log.id === doc.id);
-              if (index !== -1) {
-                Object.assign(this.logs[index], this.fromDocData(doc.data()));
-              }
-            }
-            break;
-        }
-      });
-    });
+    },
+    // -----------------
+    // several ways to access the namespaced Vuex module logs, e.g 'store.logs'
+    // binding a namespaced Vuex module is a bit verbose using mapState, mapGetters, mapActions and mapMutations:
+
+    // NOT WORKING unfortunately
+    // ...mapState({
+    //   logs: 'logs/logs'
+    // }),
+
+    // 1. specify the namespace as first argument
+    ...mapState('logs', ['logs'])
+
+    // 2.
+    // ...mapState('logs', {
+    //   logs: 'logs'
+    // }),
+
+    // 3.
+    // ...mapState({
+    //   logs: state => state.logs.logs
+    // }),
+
+    // 4. If theres such getter
+    // ...mapGetters({
+    //   logs: 'logs/logs'
+    // }),
+    // -----------------
   },
   methods: {
-    createTrainingLog(data) {
-      //convert String to firestore.Timestamp
-      data = this.toDocData(data);
-      db.collection('logs')
-        .add(data)
+    createLog(data) {
+      this.$store
+        .dispatch('logs/add', data)
         .then(() => bus.$emit('info', { text: 'Training Log project added' }))
-        .catch(() => {
-          bus.$emit('info', { type: 'error', text: 'Adding Training Log project failed' });
-        });
+        .catch(() => bus.$emit('info', { type: 'error', text: 'Adding new Training Log project failed' }));
     },
-
-    toDocData(data) {
-      const dataFixed = { ...data };
-      // the incomming 'startDate'/'dueDate' are String types
-      if (dataFixed.startDate) {
-        dataFixed.startDate = utils.strDateToFirebaseTimestamp(dataFixed.startDate);
-      }
-      if (dataFixed.dueDate) {
-        dataFixed.dueDate = utils.strDateToFirebaseTimestamp(dataFixed.dueDate);
-      }
-      // use current authorized user UID
-      dataFixed.owner = this.$store.getters.authUid;
-      return dataFixed;
-    },
-    fromDocData(data) {
-      const dataFixed = { ...data };
-      if (dataFixed.startDate) {
-        dataFixed.startDate = utils.firebaseTimestampToDate(dataFixed.startDate);
-      }
-      if (dataFixed.dueDate) {
-        dataFixed.dueDate = utils.firebaseTimestampToDate(dataFixed.dueDate);
-      }
-
-      return dataFixed;
+    removeLog(id) {
+      this.$store
+        .dispatch('logs/remove', id)
+        .then(() => bus.$emit('info', { text: 'Training Log project removed' }))
+        .catch(() => bus.$emit('info', { type: 'error', text: 'Removing a Training Log project failed' }));
     }
   }
 };

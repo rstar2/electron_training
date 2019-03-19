@@ -1,16 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { db, auth, firebase } from './firebase';
+import { db, auth, firebase } from '../firebase';
+import logs from './logs';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+//   strict: process.env.NODE_ENV !== 'production',
+  devtools: process.env.NODE_ENV !== 'production',
   state: {
     /*Boolean*/ initialized: false,
     /*firebase.User*/ user: null,
 
-    trainingLogs: [],
+    // TODO: Implement with different modules
     friends: {},
     myRequests: {},
     friendRequests: {}
@@ -137,6 +140,10 @@ const store = new Vuex.Store({
     logout(context) {
       return auth.signOut();
     }
+  },
+
+  modules: {
+    logs
   }
 });
 

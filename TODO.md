@@ -1,6 +1,6 @@
 - ~~show error on failed actions - login/.../new_log~~
 - show loading indicator
-- move 'logs' to global Vuex state
+- ~~move 'logs' to global Vuex state~~ -> use namespaces Vuex module 'logs'
 - ~~save/retrieve startData/dueDate as firebase-Timestamp~~
 - ~~login with Firebase - Google OAuth2~~ -> create/configure Google OAuth2 app and etc...
 - login with Firebase - Facebook/Google OAuth2
