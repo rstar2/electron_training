@@ -2,18 +2,18 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { db, auth, firebase } from '../firebase';
-import logs from './logs';
+import { module as logsModule, plugin as logsPlugin } from './logs';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-//   strict: process.env.NODE_ENV !== 'production',
+  //   strict: process.env.NODE_ENV !== 'production',
   devtools: process.env.NODE_ENV !== 'production',
   state: {
     /*Boolean*/ initialized: false,
     /*firebase.User*/ user: null,
 
-    // TODO: Implement with different modules
+    // Implement with different modules
     friends: {},
     myRequests: {},
     friendRequests: {}
@@ -143,8 +143,9 @@ const store = new Vuex.Store({
   },
 
   modules: {
-    logs
-  }
+    logs: logsModule
+  },
+  plugins: [logsPlugin]
 });
 
 // this is used for 2 things:

@@ -89,6 +89,10 @@ router.beforeEach((to, from, next) => {
     if (!store.getters.isAuth) {
       next({
         path: '/login',
+
+        // remember the desire 'to' route so that if we login later to re-invoke it
+        // later when we login (e.g. the isAuth state is set to true)
+        // then in the Navigation.vue we redirect to this remembered path
         query: { redirect: to.fullPath }
       });
     } else {

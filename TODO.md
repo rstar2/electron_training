@@ -8,3 +8,5 @@
 - localize (DatePicker also)
 - ~~TrainingLog single log page~~
 - TrainingLog single log page - fill with real data from the 'log'
+- fix Vuex to work in strict mode
+- 
