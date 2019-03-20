@@ -14,6 +14,9 @@ const i18n = new VueI18n({
 
 export default i18n;
 
+// export the translate function
+export const translate = i18n.t;
+
 // Lazy loading of a locale
 
 const loadedLanguages = Object.keys(messages);

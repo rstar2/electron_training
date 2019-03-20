@@ -60,6 +60,15 @@ const messages = {
     errors: {
       required: '{0} is required',
       min: '{0} must be at least {1} characters'
+    },
+
+    // Vuetify custom strings - in Vuetify also must be tweaked
+    // TODO: get the used strings
+    $vuetify: {
+      datePicker: {
+        month: 'JANUARY !!!',
+        day: 'Sunday'
+      }
     }
   }
 };
