@@ -4,7 +4,8 @@ const messages = {
       home: 'Home',
       about: 'About',
       logs: 'TrainingLogs',
-      signup: 'SignUp'
+      signup: 'SignUp',
+      dashboard: 'Dashboard'
     },
     Navigation: {
       login: 'Login',
@@ -62,12 +63,24 @@ const messages = {
       min: '{0} must be at least {1} characters'
     },
 
-    // Vuetify custom strings - in Vuetify also must be tweaked
-    // TODO: get the used strings
+    datePicker: {
+      month: {
+        '1': 'Jan',
+        '2': 'Feb'
+      },
+      day: {
+        '1': 'Sun',
+        '2': 'Mon'
+      }
+    },
+
+    // Vuetify custom strings
+    // localize the Vuetify language keys,
+    // also in the Vuetify plugin it is tweaked to use the VueI18n translate method
+    // Unfortunately the Vuetify DatePicker is using formatting/localization functions, so there are no language keys for it
     $vuetify: {
-      datePicker: {
-        month: 'JANUARY !!!',
-        day: 'Sunday'
+      dataTable: {
+        rowsPerPageText: 'Rows per page:'
       }
     }
   }

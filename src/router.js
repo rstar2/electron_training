@@ -6,7 +6,7 @@ import TrainingLogs from './views/TrainingLogs.vue';
 import TrainingLog from './components/TrainingLog.vue';
 
 import store from './store';
-import i18n from './localization';
+import { default as i18n, loadLanguageAsync } from './localization';
 
 Vue.use(Router);
 
@@ -66,11 +66,12 @@ const router = new Router({
       }
     },
     {
-      path: '/friends',
-      name: 'friends',
+      path: '/dashboard',
+      name: 'dashboard',
       component: Home,
       meta: {
-        text: i18n.t('routes.friends'),
+        requiresAuth: true,
+        text: i18n.t('routes.dashboard'),
         drawer: true,
         order: 2
       }
@@ -94,6 +95,23 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
+  } else {
+    next();
+  }
+});
+
+// let windowLang = window.navigator.language;
+// // if in the form of 'en-US' then take just the 'en' part
+// windowLang = windowLang.split('-')[0];
+
+// just a demo of the lazy/dynamic loading of new localization languages
+// could be taken this browser's locale
+router.beforeEach((to, from, next) => {
+  // const lang = to.params.lang;
+  //   const lang = windowLang
+  const lang = to.query.lang;
+  if (lang) {
+    loadLanguageAsync(lang).then(() => next());
   } else {
     next();
   }

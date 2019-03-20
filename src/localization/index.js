@@ -32,8 +32,10 @@ function setI18nLanguage(lang) {
 export function loadLanguageAsync(lang) {
   if (i18n.locale !== lang) {
     if (!loadedLanguages.includes(lang)) {
-      return import(/* webpackChunkName: "lang-[request]" */ `@/localization/messages-${lang}`).then(msgs => {
-        i18n.setLocaleMessage(lang, msgs.default);
+      // use the Webpack dynamic import feature
+      // both locations work ok - `./messages-${lang}` and `@/localization/messages-${lang}`
+      return import(/* webpackChunkName: "localization-[request]" */ `./messages-${lang}`).then(messages => {
+        i18n.setLocaleMessage(lang, messages.default);
         loadedLanguages.push(lang);
         return setI18nLanguage(lang);
       });
@@ -49,3 +51,19 @@ export function loadLanguageAsync(lang) {
 //   const lang = to.params.lang;
 //   loadLanguageAsync(lang).then(() => next());
 // });
+
+// global localization formatters for Vuetify DatePicker
+export const DatePickerMixin = {};
+/**
+ *
+ * @param {String} dateStr  ISO 8601 string
+ */
+export function dayFormatter(dateStr) {}
+export function weekdayFormatter(dateStr) {
+  console.log('weekday', dateStr);
+  return dateStr;
+}
+export function monthFormatter(dateStr) {}
+export function yearFormatter(dateStr) {}
+export function titleDateFormatter(dateStr) {}
+export function headerDateFormatter(dateStr) {}
