@@ -1,9 +1,10 @@
 <template>
-  <div>Training Log: {{ log ? log.title : 'No such log' }}</div>
+  <div>{{ $t('TrainingLog.header') }}{{ log ? log.title : $t('TrainingLog.missing') }}</div>
 </template>
 
 <script>
 export default {
+  name: 'TrainingLog',
   computed: {
     log() {
       const logId = this.$route.params.id;

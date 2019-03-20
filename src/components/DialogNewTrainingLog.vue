@@ -15,7 +15,7 @@
     <!--  The default slot - e.g the dialog's content -->
     <v-card>
       <v-card-title>
-        <span class="headline">New Training Log</span>
+        <span class="headline">{{ $t('DialogNewTrainingLog.title') }}</span>
       </v-card-title>
       <v-card-text>
         <v-form ref="form">
@@ -23,18 +23,18 @@
             <v-layout row wrap>
               <v-flex xs12>
                 <v-text-field
-                  label="Title*"
+                  :label="$t('DialogNewTrainingLog.log.title') + '*'"
                   v-model="title"
-                  :rules="[v => !!v || 'Title is required']"
+                  :rules="[v => !!v || this.$t('errors.required', [this.$t('DialogNewTrainingLog.log.title')])]"
                   required
                   @keyup.enter="submit"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  label="Description*"
+                  :label="$t('DialogNewTrainingLog.log.description') + '*'"
                   v-model="description"
-                  :rules="[v => !!v || 'Description is required']"
+                  :rules="[v => !!v || this.$t('errors.required', [this.$t('DialogNewTrainingLog.log.description')])]"
                   required
                   @keyup.enter="submit"
                 ></v-text-field>
@@ -53,11 +53,11 @@
                   <v-text-field
                     slot="activator"
                     v-model="startDate"
-                    label="Start Date*"
+                    :label="$t('DialogNewTrainingLog.log.startDate') + '*'"
                     prepend-icon="mdi-calendar"
                     readonly
                     required
-                    :rules="[v => !!v || 'Start Date is required']"
+                    :rules="[v => !!v || this.$t('errors.required', [this.$t('DialogNewTrainingLog.log.startDate')])]"
                     @keyup.enter="submit"
                   ></v-text-field>
                   <v-date-picker v-model="startDate" @input="startDatePicker = false"></v-date-picker>
@@ -77,7 +77,7 @@
                   <v-text-field
                     slot="activator"
                     v-model="dueDate"
-                    label="Due Date"
+                    :label="$t('DialogNewTrainingLog.log.dueDate')"
                     prepend-icon="mdi-calendar"
                     readonly
                     required
@@ -89,12 +89,12 @@
             </v-layout>
           </v-container>
         </v-form>
-        <small>*indicates required field</small>
+        <small>*{{ $t('required_fields') }}</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="error" flat @click="dialog = false">Close</v-btn>
-        <v-btn color="primary" flat @click="submit">Create</v-btn>
+        <v-btn color="error" flat @click="dialog = false">{{ $t('close') }}</v-btn>
+        <v-btn color="primary" flat @click="submit">{{ $t('DialogNewTrainingLog.create') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -102,6 +102,7 @@
 
 <script>
 export default {
+  name: 'DialogNewTrainingLog',
   data() {
     return {
       // control the visibility of the dialog

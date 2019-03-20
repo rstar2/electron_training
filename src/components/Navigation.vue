@@ -10,16 +10,16 @@
 
       <template v-if="$store.state.initialized">
         <v-btn v-if="isAuth" flat @click="onLogout">
-          <span class="mr-2">Logout</span>
+          <span class="mr-2">{{ $t('Navigation.logout') }}</span>
           <v-icon>mdi-logout</v-icon>
         </v-btn>
         <template v-else>
           <v-btn flat @click="showDialogLogin(false)">
-            <span class="mr-2">Login</span>
+            <span class="mr-2">{{ $t('Navigation.login') }}</span>
             <v-icon>mdi-login</v-icon>
           </v-btn>
           <v-btn flat @click="showDialogLogin(true)">
-            <span class="mr-2">Register</span>
+            <span class="mr-2">{{ $t('Navigation.register') }}</span>
             <v-icon>mdi-account-plus</v-icon>
           </v-btn>
         </template>

@@ -6,12 +6,9 @@ import TrainingLogs from './views/TrainingLogs.vue';
 import TrainingLog from './components/TrainingLog.vue';
 
 import store from './store';
+import i18n from './localization';
 
 Vue.use(Router);
-
-// const requiresAuth = () {
-
-// }
 
 const router = new Router({
   mode: 'history',
@@ -22,7 +19,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        text: 'Home',
+        text: i18n.t('routes.home'),
         drawer: true,
         order: 0
       }
@@ -32,7 +29,7 @@ const router = new Router({
       name: 'signup',
       component: Home,
       meta: {
-        text: 'SignUp'
+        text: i18n.t('routes.signup')
       }
     },
     {
@@ -40,7 +37,7 @@ const router = new Router({
       name: 'logs',
       component: TrainingLogs,
       meta: {
-        text: 'Training Logs',
+        text: i18n.t('routes.logs'),
         drawer: true,
         order: 1,
         requiresAuth: true
@@ -51,7 +48,6 @@ const router = new Router({
       name: 'log',
       component: TrainingLog,
       meta: {
-        text: 'Training Log',
         requiresAuth: true
       }
     },
@@ -63,7 +59,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
       meta: {
-        text: 'About',
+        text: i18n.t('routes.about'),
         drawer: true,
         icon: 'person',
         order: 100
@@ -74,7 +70,7 @@ const router = new Router({
       name: 'friends',
       component: Home,
       meta: {
-        text: 'Friends',
+        text: i18n.t('routes.friends'),
         drawer: true,
         order: 2
       }

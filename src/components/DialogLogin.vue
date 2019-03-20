@@ -12,7 +12,7 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
-                  label="Email*"
+                  :label="$t('DialogLogin.email') + '*'"
                   name="email"
                   v-model="email"
                   :rules="validateRules.email"
@@ -23,7 +23,7 @@
 
               <v-flex xs12 v-if="isRegister">
                 <v-text-field
-                  label="Name*"
+                  :label="$t('DialogLogin.name') + '*'"
                   v-model="name"
                   :rules="validateRules.name"
                   required
@@ -33,7 +33,7 @@
 
               <v-flex xs12>
                 <v-text-field
-                  label="Password*"
+                  :label="$t('DialogLogin.password') + '*'"
                   name="password"
                   v-model="password"
                   :type="passwordShown ? 'text' : 'password'"
@@ -55,7 +55,7 @@
             </v-layout>
           </v-container>
         </v-form>
-        <small>*indicates required field</small>
+        <small>*{{ $t('required_fields') }}</small>
       </v-card-text>
 
       <v-card-actions>
@@ -63,8 +63,9 @@
             @click="active = false; loginWithGoogle()"
             style="width: 30%" /> -->
         <v-spacer></v-spacer>
-        <v-btn color="error" flat @click="active = false">Close</v-btn>
-        <v-btn color="primary" flat @click="submit" v-text="isRegister ? 'Register' : 'Login'"></v-btn>
+        <v-btn color="error" flat @click="active = false">{{ $t('close') }}</v-btn>
+        <v-btn color="primary" flat @click="submit"
+               v-text="isRegister ? $t('DialogLogin.register') : $t('DialogLogin.login')"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -74,6 +75,7 @@
 import { mapActions } from 'vuex';
 
 export default {
+  name: 'DialogLogin',
   props: {
     isRegister: { type: Boolean, default: false },
     show: { type: Boolean, default: false }
@@ -87,14 +89,17 @@ export default {
 
       validateRules: {
         email: [
-          v => !!v || 'Email is required',
-          v => (v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,7})+$/.test(v)) || 'Email must be valid email address'
+          v => !!v || this.$t('errors.required', [this.$t('DialogLogin.email')]),
+          v => (v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,7})+$/.test(v)) || this.$t('DialogLogin.errors.email.valid')
         ],
-        name: [v => !!v || 'Name is required', v => (v && v.length >= 5) || 'Name must be at least 5 characters'],
+        name: [
+          v => !!v || this.$t('errors.required', [this.$t('DialogLogin.name')]),
+          v => (v && v.length >= 5) || this.$t('errors.min', [this.$t('DialogLogin.name'), 5])
+        ],
         password: [
-          v => !!v || 'Password is required',
+          v => !!v || this.$t('errors.required', [this.$t('DialogLogin.password')]),
           //   this is Firebase requirement otherwise it's WEAK_PASSWOrD error
-          v => (v && v.length >= 6) || 'Password must be at least 6 characters'
+          v => (v && v.length >= 6) || this.$t('errors.min', [this.$t('DialogLogin.password'), 6])
         ]
       }
     };
