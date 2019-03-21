@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Loader />
     <Navigation />
 
     <v-content class="ma-4">
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+import Loader from './components/Loader.vue';
 import Navigation from './components/Navigation.vue';
 
 export default {
