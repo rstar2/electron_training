@@ -9,7 +9,7 @@
 - ~~browser auto-prefill/suggest form inputs~~  -> the inputs have to be named
 - ~~localize~~ -> use VueI18n
 - ~~localize using lazy-loading of a locale~~ -> use the Webpack dynamic modules loading feature
-- ~~localize Vuetify~~ -> https://vuetifyjs.com/en/framework/internationalization and formatters for DatePicker
+- ~~localize Vuetify~~ -> https://vuetifyjs.com/en/framework/internationalization, for DatePicker tweak the VDatePicker default prop formatters
 - ~~TrainingLog single log page~~
 - TrainingLog single log page - fill with real data from the 'log'
 - ~~fix Vuex to work in strict mode~~ -> don't store the fireBase.User directly in the Vuex state as its props are internally mutated by Firebase (which is against the strict mode, to happen always in mutation handlers)

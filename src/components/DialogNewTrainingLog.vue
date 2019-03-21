@@ -101,8 +101,6 @@
 </template>
 
 <script>
-import { weekdayFormatter } from '../localization';
-
 export default {
   name: 'DialogNewTrainingLog',
   data() {

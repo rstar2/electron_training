@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
+import { VDatePicker } from 'vuetify/lib';
+
 import messages from './messages';
 
 Vue.use(VueI18n);
@@ -15,10 +17,11 @@ const i18n = new VueI18n({
 export default i18n;
 
 // export the translate function
-export const translate = i18n.t;
+export const translate = i18n.t.bind(i18n);
+
+
 
 // Lazy loading of a locale
-
 const loadedLanguages = Object.keys(messages);
 
 function setI18nLanguage(lang) {
@@ -53,17 +56,44 @@ export function loadLanguageAsync(lang) {
 // });
 
 // global localization formatters for Vuetify DatePicker
-export const DatePickerMixin = {};
-/**
- *
- * @param {String} dateStr  ISO 8601 string
- */
-export function dayFormatter(dateStr) {}
-export function weekdayFormatter(dateStr) {
-  console.log('weekday', dateStr);
-  return dateStr;
+function weekdayFormatter(dateStr) {
+  const date = new Date(dateStr);
+  return translate(`datePicker.day.${date.getDay()}`).charAt(0);
+  // return i18n.t(`datePicker.day.${date.getDay()}`).charAt(0);
 }
-export function monthFormatter(dateStr) {}
-export function yearFormatter(dateStr) {}
-export function titleDateFormatter(dateStr) {}
-export function headerDateFormatter(dateStr) {}
+function titleDateFormatter(dateStr) {
+  const date = new Date(dateStr);
+  return `${translate(`datePicker.day.${date.getDay()}`)}, ${translate(`datePicker.month.${date.getMonth()}`)} ${date.getDate()}`;
+}
+function headerDateFormatter(dateStr) {
+  const date = new Date(dateStr);
+  return `${translate(`datePicker.month.${date.getMonth()}`)} ${date.getFullYear()}`;
+}
+
+// Object.keys(VDatePicker)) are 'options', 'superOptions', 'extendOptions', 'sealedOptions', ...
+// NOTE: I dont' understand why exactly but the 'VDatePicker.extendOptions.props' should be modified,
+// not the 'VDatePicker.options.props' in order to set a default value to the different formatters props
+// VDatePicker.options.props.weekdayFormat = {
+//   type: Function,
+//   default: weekdayFormatter
+// };
+VDatePicker.extendOptions.props.weekdayFormat = {
+  type: Function,
+  default: weekdayFormatter
+};
+VDatePicker.extendOptions.props.titleDateFormat = {
+  type: Function,
+  default: titleDateFormatter
+};
+VDatePicker.extendOptions.props.headerDateFormat = {
+  type: Function,
+  default: headerDateFormatter
+};
+// VDatePicker.extendOptions.props.monthFormat = {
+//   type: Function,
+//   default: monthFormatter
+// };
+// VDatePicker.extendOptions.props.yearFormat = {
+//   type: Function,
+//   default: yearFormatter
+// };
