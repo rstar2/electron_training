@@ -1,13 +1,15 @@
 # TODOs
 
 - ~~show error on failed actions - login/.../new_log~~
-- show loading indicator
+- ~~show loading indicator~~
+    > use a global Loader component and a Bus to emit/receive events to update it
 - ~~move 'logs' to global Vuex state~~
     > use namespaces Vuex module 'logs'
 - ~~save/retrieve startData/dueDate as firebase-Timestamp~~
 - ~~login with Firebase - Google OAuth2~~
     > create/configure Google OAuth2 app and etc...
 - login with Firebase - Facebook/Google OAuth2
+- merge accounts for a same email, no matter with which priveder they are logging (password/google/facebook)
 - ~~browser auto-prefill/suggest form inputs~~
     > the inputs have to be named
 - ~~localize~~

@@ -81,16 +81,20 @@ export default {
   },
   methods: {
     createLog(data) {
+      bus.$emit('loading', true);
       this.$store
         .dispatch('logs/add', data)
         .then(() => bus.$emit('info', { text: this.$t('TrainingLogs.info.added') }))
-        .catch(() => bus.$emit('info', { type: 'error', text: this.$t('TrainingLogs.info.added_error') }));
+        .catch(() => bus.$emit('info', { type: 'error', text: this.$t('TrainingLogs.info.added_error') }))
+        .finally(() => bus.$emit('loading', false));
     },
     removeLog(id) {
+      bus.$emit('loading', true);
       this.$store
         .dispatch('logs/remove', id)
         .then(() => bus.$emit('info', { text: this.$t('TrainingLogs.info.removed') }))
-        .catch(() => bus.$emit('info', { type: 'error', text: this.$t('TrainingLogs.info.removed_error') }));
+        .catch(() => bus.$emit('info', { type: 'error', text: this.$t('TrainingLogs.info.removed_error') }))
+        .finally(() => bus.$emit('loading', false));
     }
   }
 };

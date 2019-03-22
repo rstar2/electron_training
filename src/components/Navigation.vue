@@ -143,6 +143,7 @@ export default {
       this.dialogLogin.isRegister = isRegister;
     },
     onLoginOrRegister({ isRegister, email, name, password }) {
+      bus.$emit('loading', true);
       let promise;
       if (isRegister) {
         promise = this.$store.dispatch('register', { email, name, password });
@@ -153,14 +154,15 @@ export default {
         //const errorCode = error.code;
         const errorMessage = error.message;
         bus.$emit('info', { type: 'error', text: errorMessage });
-      });
+      }).finally(() => bus.$emit('loading', false));
     },
     onLogout() {
+      bus.$emit('loading', true);
       this.$store.dispatch('logout', {}).catch(error => {
         //const errorCode = error.code;
         const errorMessage = error.message;
         bus.$emit('info', { type: 'error', text: errorMessage });
-      });
+      }).finally(() => bus.$emit('loading', false));
     }
   },
   created() {

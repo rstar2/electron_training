@@ -1,21 +1,24 @@
 <template>
   <v-progress-linear
-    color="white"
-    class="mb-0"
-    style="height: 3px; width: 100%; z-index: 100;"
-    :active="true"
-    :query="true"
-    v-model="value"
-    :indeterminate="indeterminate">
+    color="blue"
+    class="my-0"
+    style="height: 3px; width: 100%; z-index: 100; position: fixed;"
+    :active="show"
+    :query="false"
+    :value="value"
+    :indeterminate="indeterminate"
+  >
   </v-progress-linear>
 </template>
 
 <script>
+import bus from '../bus.js';
+
 export default {
   data() {
     return {
-      show: true,
-      value: 0, // set -1 to become indeterminate
+      show: false,
+      value: -1, // set -1 to become indeterminate
       query: false
     };
   },
@@ -25,16 +28,19 @@ export default {
       return this.value < 0;
     }
   },
-  methods: {
-    _loading() {
+  created() {
+    bus.$on('loading', value => {
       if (value === false) {
-        loading.parentElement.remove();
+        this.show = false;
+        this.value = -1;
       } else if (value === true) {
-        loading.style.width = '30%';
+        this.show = true;
+        this.value = -1;
       } else if (value instanceof Number || typeof value === 'number') {
-        loading.style.width = value + '%';
+        this.show = true;
+        this.value = value;
       }
-    }
+    });
   }
 };
 </script>

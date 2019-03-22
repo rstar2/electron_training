@@ -13,6 +13,10 @@ const module = {
     }
   },
   mutations: {
+    clear(state) {
+      // clear current array - another way is to reassign it "state.logs. = []"
+      state.logs.length = 0;
+    },
     add(state, { id, data }) {
       state.logs.push({ id, ...utils.fromDocData(data) });
     },

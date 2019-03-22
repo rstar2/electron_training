@@ -181,6 +181,7 @@ auth.onAuthStateChanged(user => {
 
   promise.then(user => {
     store.commit('user', user);
+    store.commit('logs/clear');
     store.commit('initialize');
   });
 });
