@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import './plugins/vuetify';
+import './filters';
 
 import App from './App.vue';
 import router from './router';

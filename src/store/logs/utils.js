@@ -12,12 +12,12 @@ const strDateToFirebaseTimestamp = dateStr => {
 
 /**
  * @param {firebase.firestore.Timestamp} dateStr
- * @return {String}
+ * @return {Date}
  */
 const firebaseTimestampToDate = timestamp => {
   // Date picker model (ISO 8601 format, YY-mm-dd or YY-mm)
   const /*Date*/ date = timestamp.toDate();
-  return date.toISOString();
+  return date;
 };
 
 /**

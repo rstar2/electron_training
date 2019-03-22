@@ -13,14 +13,15 @@
           <div slot="header" class="py-1">{{ log.title }}</div>
           <v-card>
             <v-card-text class="px-4 grey--text">
-              <div class="font-weight-bold">{{ $t('TrainingLogs.log.dueBy', [log.dueDate]) }}</div>
+              <div class="font-weight-bold">{{ $t('TrainingLogs.log.dueBy', [filterDate(log.dueDate)]) }}</div>
               <div>{{ log.description }}</div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="error" flat @click="removeLog(log.id)">{{ $t('remove') }}</v-btn>
               <v-btn color="primary" flat @click="$router.push({ name: 'log', params: { id: log.id } })">
-                  {{ $t('TrainingLogs.log.view') }}</v-btn>
+                {{ $t('TrainingLogs.log.view') }}
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-expansion-panel-content>
@@ -44,12 +45,7 @@ export default {
   },
   computed: {
     logsShown() {
-      return !this.filterMyLogs
-        ? this.logs
-        : this.logs.filter(log => {
-            // get from the auth user
-            return this.$store.getters.checkAuthUser(log.owner);
-          });
+      return this.logs;
     },
     // -----------------
     // several ways to access the namespaced Vuex module logs, e.g 'store.logs'

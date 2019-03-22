@@ -1,5 +1,5 @@
 import { db } from '../../firebase';
-import * as utils from '../../utils';
+import * as utils from './utils';
 
 const module = {
   namespaced: true,
@@ -51,8 +51,30 @@ const module = {
 
 // create a Vuex store plugin
 const plugin = store => {
-  const subscribeForLogs = () => {
-    return db.collection('logs').onSnapshot(snapshot => {
+  const subscribeForLogs = owner => {
+    // implementing query with where-clause '=='
+    // db.collection('test').where('value', '==', 5).get()
+    //   .then(({ docs }) => {
+    //     docs.forEach(doc => console.log('doc', doc.data()));
+    //   });
+    // implementing query with where-clause '!='
+    // Promise.all([
+    //   db.collection('test').where('value', '<', 5).get(),
+    //   db.collection('test').where('value', '>', 5).get()])
+    //   .then(([res1, res2]) => {
+    //     return { docs: [...res1.docs, ...res2.docs] };
+    //   })
+    //   .then(({ docs }) => {
+    //     docs.forEach(doc => console.log('doc', doc.data()));
+    //   });
+
+    let query = db.collection('logs');
+    // get logs ONLY for specific 'owner' if specified
+    if (owner) {
+      query = query.where('owner', '==', owner);
+    }
+
+    return query.onSnapshot(snapshot => {
       snapshot.docChanges().forEach(({ type, doc }) => {
         switch (type) {
           case 'added':
@@ -72,14 +94,14 @@ const plugin = store => {
   // register this 'onSnapshot' only if we are logged-in, and unregister when logout
   // use store plugin and store.watch() or store.subscribe or store.subscribeAction
   let unsubscribeForLogs = null;
-  // the first Function returns the value to watch
+  // the first Function returns the value to watch. It accepts arguments : global Vuex store's - state, getters
   // the second Function is the callback called on changes
   store.watch(
     (state, getters) => {
-      return getters.isAuth;
+      return getters.authUid;
     },
-    isAuth => {
-      if (!isAuth) {
+    authUid => {
+      if (!authUid) {
         // unsubscribe from the firebase
         if (unsubscribeForLogs) {
           unsubscribeForLogs();
@@ -87,7 +109,8 @@ const plugin = store => {
         }
       } else {
         // when we authorized in Firebase ONLY then subscribe
-        unsubscribeForLogs = subscribeForLogs();
+        // get from the auth user with uid 'authUid'
+        unsubscribeForLogs = subscribeForLogs(authUid);
       }
     },
     {

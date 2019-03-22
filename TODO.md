@@ -23,3 +23,4 @@
 - ~~fix Vuex to work in strict mode~~
     > don't store the fireBase.User directly in the Vuex state as its props are internally mutated by Firebase (which is against the strict mode, to happen always in mutation handlers)
 - implement user's dashboard - friends/request/etc...
+- add Firebase project (firebase.json) and use the firebase-cli to host-deploy (supporting custom domain) and etc..
