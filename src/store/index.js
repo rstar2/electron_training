@@ -34,7 +34,7 @@ const store = new Vuex.Store({
       // this.$store.getters.checkAuthUser("asd")
       return uid => {
         const authUid = getters.authUid;
-        return authUid && authUid == uid;
+        return authUid && authUid === uid;
       };
     }
   },
@@ -95,7 +95,7 @@ const store = new Vuex.Store({
     },
 
     /**
-     * Logn=in action
+     * Lognin action
      * @param {Vuex.ActionContext} context
      * @param {{email:String, password: String}} payload
      * @return {Promise}
@@ -106,7 +106,7 @@ const store = new Vuex.Store({
       return auth.signInWithEmailAndPassword(email, password);
     },
 
-    loginWithGoogle(context) {
+    loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
       // provider additional OAuth 2.0 scopes
       // googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -143,10 +143,9 @@ const store = new Vuex.Store({
 
     /**
      * Logout action
-     * @param {Vuex.ActionContext} context
      * @return {Promise}
      */
-    logout(context) {
+    logout() {
       return auth.signOut();
     }
   },
